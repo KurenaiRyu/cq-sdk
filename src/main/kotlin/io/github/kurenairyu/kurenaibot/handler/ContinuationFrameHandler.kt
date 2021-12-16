@@ -1,4 +1,4 @@
-package io.github.kurenairyu.kurenaibot.netty
+package io.github.kurenairyu.kurenaibot.handler
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler

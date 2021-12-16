@@ -11,11 +11,11 @@ class GroupMessageEvent(
     override val message: List<SingleMessage>,
     override val rawMessage: String,
     override val font: Int,
+    override val groupId: Long,
     val anonymous: Anonymous? = null,
     val subType: GroupMessageSubType,
     val sender: Member,
-    val groupId: Long,
-) : MessageEvent() {
+) : MessageEvent(), GroupEvent {
     override val messageType = MessageType.GROUP
 }
 

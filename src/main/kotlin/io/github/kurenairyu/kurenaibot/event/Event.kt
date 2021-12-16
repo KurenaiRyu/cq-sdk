@@ -8,6 +8,7 @@ abstract class Event {
 
 enum class PostType(val value: String) {
     MESSAGE("message"),
+    NOTICE("notice")
     ;
 
     override fun toString(): String {

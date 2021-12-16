@@ -1,6 +1,7 @@
 package io.github.kurenairyu.kurenaibot.netty
 
 import io.github.kurenairyu.kurenaibot.KurenaiBot
+import io.github.kurenairyu.kurenaibot.handler.CqMessageReader
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.http.DefaultHttpHeaders
