@@ -48,6 +48,17 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            // groupId = project.group
+            // artifactId = project.name
+            // version = project.version
+            from(components["java"])
+        }
+    }
+}
+
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "17"
 }
