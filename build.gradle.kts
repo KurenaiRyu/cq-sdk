@@ -48,6 +48,10 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(sourceSets.main.get().allSource)
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -61,4 +65,21 @@ publishing {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "17"
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            mapOf(
+                "Main-Class" to main,
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version
+            )
+        )
+    }
+
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }

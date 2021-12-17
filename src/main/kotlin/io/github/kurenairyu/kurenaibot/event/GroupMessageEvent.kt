@@ -16,15 +16,11 @@ class GroupMessageEvent(
     val subType: GroupMessageSubType,
     val sender: Member,
 ) : MessageEvent(), GroupEvent {
-    override val messageType = MessageType.GROUP
+    override val messageType = MessageEventType.group
 }
 
-enum class GroupMessageSubType(private val value: String) {
-    NORMAL("normal"), ANONYMOUS("anonymous"), NOTICE("notice");
-
-    override fun toString(): String {
-        return value
-    }
+enum class GroupMessageSubType {
+    normal, anonymous, notice;
 }
 
 class Anonymous(
@@ -32,11 +28,3 @@ class Anonymous(
     val name: String,
     val flag: String,
 )
-
-enum class Role(val value: String) {
-    OWNER("owner"), ADMIN("admin"), MEMBER("member");
-
-    override fun toString(): String {
-        return value
-    }
-}

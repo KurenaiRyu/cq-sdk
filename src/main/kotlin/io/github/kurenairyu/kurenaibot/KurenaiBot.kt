@@ -4,7 +4,11 @@ import io.github.kurenairyu.kurenaibot.config.CommonHeaderInterceptor
 import io.github.kurenairyu.kurenaibot.event.Event
 import io.github.kurenairyu.kurenaibot.netty.WebSocketChannelInitializer
 import io.github.kurenairyu.kurenaibot.netty.WebSocketServerChannelInitializer
+import io.github.kurenairyu.kurenaibot.request.SendGroupMsg
+import io.github.kurenairyu.kurenaibot.request.SendPrivateMsg
 import io.github.kurenairyu.kurenaibot.response.LoginInfo
+import io.github.kurenairyu.kurenaibot.response.MessageId
+import io.github.kurenairyu.kurenaibot.response.Receive
 import io.netty.bootstrap.Bootstrap
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelOption
@@ -13,6 +17,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
 import mu.KotlinLogging
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.Map
@@ -30,13 +35,21 @@ class KurenaiBot(
     val bindPort: Int? = null,
 ) {
 
-    //    val logInterceptor = HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY }
+    companion object {
+        fun SendGroupMsg.send(bot: KurenaiBot): Response<Receive<MessageId>> {
+            return bot.api.sendGroupMsg(this).execute()
+        }
+
+        fun SendPrivateMsg.send(bot: KurenaiBot): Response<Receive<MessageId>> {
+            return bot.api.sendPrivateMsg(this).execute()
+        }
+    }
+
     private val headerInterceptor = CommonHeaderInterceptor(Map.of("Authorization", "Bearer $accessToken"))
     private val retrofit = Retrofit.Builder()
         .client(
             OkHttpClient().newBuilder() // 设置OKHttpClient,如果不设置会提供一个默认的
                 .addInterceptor(headerInterceptor)
-//        .addInterceptor(logInterceptor)
                 .build()
         )
         .baseUrl("http://$apiHost:$httpPort") //设置baseUrl
@@ -61,7 +74,6 @@ class KurenaiBot(
                 val b = ServerBootstrap()
                 b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel::class.java)
-//                    .handler(LoggingHandler(LogLevel.DEBUG))
                     .childHandler(WebSocketServerChannelInitializer(this))
                     .bind(bindPort).sync()
                 log.info("Web socket server start at port {}.", bindPort)
@@ -72,7 +84,6 @@ class KurenaiBot(
                     .option(ChannelOption.TCP_NODELAY, true)
                     .group(workerGroup)
                     .channel(NioSocketChannel::class.java)
-//                    .handler(LoggingHandler(LogLevel.INFO))
                     .handler(WebSocketChannelInitializer(this))
                     .connect(apiHost, wsPort)
                     .sync().channel()
@@ -118,7 +129,6 @@ class KurenaiBot(
             log.debug { "Handler thread has being closed" }
         }
     }
-
 }
 
 fun main() {

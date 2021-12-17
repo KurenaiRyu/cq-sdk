@@ -1,7 +1,5 @@
 package io.github.kurenairyu.kurenaibot.entity
 
-import io.github.kurenairyu.kurenaibot.event.Role
-
 class Member(
     override val userId: Long,
     val nickname: String,
@@ -13,3 +11,7 @@ class Member(
     val role: Role,
     val title: String
 ) : User()
+
+enum class Role {
+    owner, admin, member;
+}

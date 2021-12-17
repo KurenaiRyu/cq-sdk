@@ -6,14 +6,8 @@ abstract class Event {
     abstract val postType: PostType
 }
 
-enum class PostType(val value: String) {
-    MESSAGE("message"),
-    NOTICE("notice")
+enum class PostType() {
+    message,
+    notice
     ;
-
-    override fun toString(): String {
-        return value
-    }
-
-
 }

@@ -33,8 +33,6 @@ class CqMessageReader(private val bot: KurenaiBot) : SimpleChannelInboundHandler
             }?.let(bot.eventQueue::add)
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            ctx.fireChannelRead(frame.retain())
         }
     }
 

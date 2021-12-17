@@ -4,10 +4,17 @@ import io.github.kurenairyu.kurenaibot.request.SendGroupMsg
 import io.github.kurenairyu.kurenaibot.request.SendPrivateMsg
 
 class Message(text: String? = null) {
+
+    companion object {
+        fun String.asMessage(): Message {
+            return Message(this)
+        }
+    }
+
     private val list = ArrayList<SingleMessage>()
 
     init {
-        text?.let { list.add(SingleMessage(MessageType.TEXT, mapOf("text" to text))) }
+        text?.let { list.add(SingleMessage(MessageType.text, mapOf("text" to text))) }
     }
 
     fun plus(msg: Message): Message {
@@ -23,12 +30,12 @@ class Message(text: String? = null) {
     fun plus(msg: String) = text(msg)
 
     fun text(msg: String): Message {
-        list.add(SingleMessage(MessageType.TEXT, mapOf("text" to msg)))
+        list.add(SingleMessage(MessageType.text, mapOf("text" to msg)))
         return this
     }
 
     fun at(qq: Long): Message {
-        list.add(SingleMessage(MessageType.AT, mapOf("qq" to qq.toString())))
+        list.add(SingleMessage(MessageType.at, mapOf("qq" to qq.toString())))
         return this
     }
 
@@ -43,10 +50,6 @@ class Message(text: String? = null) {
 
 class SingleMessage(val type: MessageType, val data: Map<String, String>)
 
-enum class MessageType(private val value: String) {
-    TEXT("text"), IMAGE("image"), FACE("face"), AT("at");
-
-    override fun toString(): String {
-        return this.value
-    }
+enum class MessageType {
+    text, image, face, at, reply, json;
 }
