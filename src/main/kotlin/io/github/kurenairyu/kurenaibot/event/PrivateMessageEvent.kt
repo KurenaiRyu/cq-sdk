@@ -12,6 +12,6 @@ data class PrivateMessageEvent(
     override val font: Int
 ) : MessageEvent() {
 
-    override val messageType = MessageEventType.group
+    override val messageType = MessageEventType.GROUP
 
 }

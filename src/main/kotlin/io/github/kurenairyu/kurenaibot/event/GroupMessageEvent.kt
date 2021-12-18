@@ -13,14 +13,17 @@ class GroupMessageEvent(
     override val font: Int,
     override val groupId: Long,
     val anonymous: Anonymous? = null,
-    val subType: GroupMessageSubType,
+    val subType: String,
     val sender: Member,
 ) : MessageEvent(), GroupEvent {
-    override val messageType = MessageEventType.group
+    override val messageType = MessageEventType.GROUP
 }
 
-enum class GroupMessageSubType {
-    normal, anonymous, notice;
+object GroupMessageSubType {
+    const val FIELD_NAME = "subtype"
+    const val NORMAL = "normal"
+    const val ANONYMOUS = "anonymous"
+    const val NOTICE = "notice";
 }
 
 class Anonymous(

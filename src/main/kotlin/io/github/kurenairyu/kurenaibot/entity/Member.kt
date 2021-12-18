@@ -8,10 +8,13 @@ class Member(
     val age: Int,
     val area: String,
     val level: String,
-    val role: Role,
+    val role: String,
     val title: String
 ) : User()
 
-enum class Role {
-    owner, admin, member;
+object Role {
+    const val FIELD_NAME = "role"
+    const val OWNER = "owner"
+    const val ADMIN = "admin"
+    const val member = "member"
 }

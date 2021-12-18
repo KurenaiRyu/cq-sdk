@@ -3,11 +3,11 @@ package io.github.kurenairyu.kurenaibot.event
 abstract class Event {
     abstract val time: Long
     abstract val selfId: Long
-    abstract val postType: PostType
+    abstract val postType: String
 }
 
-enum class PostType() {
-    message,
-    notice
-    ;
+object PostType {
+    const val FIELD_NAME = "post_type"
+    const val MESSAGE = "message"
+    const val NOTICE = "notice"
 }
