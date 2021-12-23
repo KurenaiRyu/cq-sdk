@@ -21,16 +21,16 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.0")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.13.0")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.13.1")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 
-    implementation("io.netty:netty-all:4.1.70.Final")
+    implementation("io.netty:netty-all:4.1.72.Final")
 
     //logging
     implementation("ch.qos.logback:logback-core:1.3.0-alpha10")
     implementation("ch.qos.logback:logback-classic:1.3.0-alpha10")
-    implementation("org.apache.logging.log4j:log4j-to-slf4j:2.15.0")
+    implementation("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
     implementation("org.slf4j:slf4j-api:2.0.0-alpha5")
     implementation("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
 
