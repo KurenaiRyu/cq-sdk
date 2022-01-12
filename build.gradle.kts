@@ -6,36 +6,37 @@ plugins {
     `maven-publish`
 }
 
-group = "moe.kurenai.bot"
-version = "1.0-SNAPSHOT"
+group = "moe.kurenai.cq"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
 }
 
+object Versions {
+    const val jackson = "2.13.1"
+    const val log4j = "2.17.1"
+    const val disruptor = "3.4.4"
+}
+
 dependencies {
     api("org.jetbrains.kotlin", "kotlin-reflect")
     api("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
 
-    api("com.squareup.retrofit2:retrofit:2.9.0")
-    api("com.squareup.retrofit2:converter-jackson:2.9.0")
-    api("com.squareup.okhttp3:logging-interceptor:4.9.3")
-    api("com.fasterxml.jackson.core:jackson-annotations:2.13.1")
-    api("com.fasterxml.jackson.core:jackson-core:2.13.1")
-    api("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    api("com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}")
+    api("com.fasterxml.jackson.core:jackson-core:${Versions.jackson}")
+    api("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Versions.jackson}")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}")
 
     api("io.netty:netty-all:4.1.72.Final")
 
     //logging
-    api("ch.qos.logback:logback-core:1.3.0-alpha10")
-    api("ch.qos.logback:logback-classic:1.3.0-alpha10")
-    api("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
-    api("org.slf4j:slf4j-api:2.0.0-alpha5")
-    api("io.github.microutils", "kotlin-logging-jvm", "2.0.6")
+    api("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
+    api("org.apache.logging.log4j:log4j-api:${Versions.log4j}")
 
-    api("org.msgpack", "msgpack-core", "0.9.0")
-    api("org.msgpack", "jackson-dataformat-msgpack", "0.9.0")
+    api("com.lmax:disruptor:${Versions.disruptor}")
 }
 
 val main = "MainKt"
