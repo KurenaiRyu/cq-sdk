@@ -2,6 +2,8 @@ package moe.kurenai.cq.model
 
 import moe.kurenai.cq.request.group.SendGroupMsg
 import moe.kurenai.cq.request.private.SendPrivateMsg
+import java.io.File
+import java.util.*
 
 class Message(text: String? = null) {
 
@@ -39,16 +41,24 @@ class Message(text: String? = null) {
         return this
     }
 
-    fun img(path: String) {
-        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = "file:///$path")))
+    fun img(path: String, isUrl: Boolean = false): Message {
+        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = if (isUrl) path else "file:///$path")))
+        return this
     }
 
-    fun video(path: String) {
-        list.add(SingleMessage(MessageType.VIDEO, MessageData(file = "file:///$path")))
+    fun img(file: File): Message {
+        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = "base64://${Base64.getEncoder().encode(file.readBytes()).decodeToString()}")))
+        return this
     }
 
-    fun record(path: String) {
-        list.add(SingleMessage(MessageType.RECORD, MessageData(file = "file:///$path")))
+    fun video(path: String, isUrl: Boolean = false): Message {
+        list.add(SingleMessage(MessageType.VIDEO, MessageData(file = if (isUrl) path else "file:///$path")))
+        return this
+    }
+
+    fun record(path: String, isUrl: Boolean = false): Message {
+        list.add(SingleMessage(MessageType.RECORD, MessageData(file = if (isUrl) path else "file:///$path")))
+        return this
     }
 
     fun privateMsg(qq: Long): SendPrivateMsg {

@@ -2,6 +2,7 @@ package moe.kurenai.cq
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.ChannelFuture
 import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -77,8 +78,20 @@ class KurenaiBot(
                     .group(workerGroup)
                     .channel(NioSocketChannel::class.java)
                     .handler(WebSocketChannelInitializer(this))
-                    .connect(apiHost, wsPort)
+                    .connect(apiHost, wsPort).addListener {
+                        if (!it.isSuccess) {
+                            doReconnect(bootStrap, 3)
+                        }
+                    }
                     .sync().channel()
+                    .closeFuture().addListener {
+                        it.cause()?.let {
+                            log.error("Web socket 连接关闭", it.cause)
+                            log.info("重新连接...")
+                        }
+                        doReconnect(bootStrap)
+                    }
+
                 log.info("Web socket server connect to $apiHost:$wsPort.")
             }
         } catch (e: InterruptedException) {
@@ -88,8 +101,29 @@ class KurenaiBot(
         loginInfo = loginInfoFuture.join().takeIf { it.isSuccess() }?.data ?: throw Exception("QQ 启动失败")
         log.info("QQ ${loginInfo.nickname}(${loginInfo.userId}) 启动成功")
     }
+
+    private fun doReconnect(bootstrap: Bootstrap, delay: Long = 5, timeUnit: TimeUnit = TimeUnit.SECONDS) {
+        bootstrap.connect(apiHost, wsPort).addListener { f ->
+            f as ChannelFuture
+            if (!f.isSuccess) {
+                log.info("连接失败，重新连接 $apiHost:$wsPort")
+                f.channel().eventLoop().schedule({
+                    doReconnect(bootstrap)
+                }, delay, timeUnit)
+            } else {
+                log.info("重新连接成功")
+            }
+        }
+    }
 }
 
 fun main() {
-    val bot = KurenaiBot(listOf(DefaultEventSubscriber()), "121.4.170.11", 5710, "gqEkxed8rFRmBXe1", 6710)
+//    val uri = File("X:\\Pictures\\e6mS7XPq4JkzhVc_2.gif").toURI()
+//    println(uri)
+    val client = CQClient("http://121.4.170.11:5710", "gqEkxed8rFRmBXe1")
+//
+//    client.sendSync(Message().img(File("X:\\Pictures\\e6mS7XPq4JkzhVc_2.gif")).groupMsg(622032041))
+
+//    val bot = KurenaiBot(listOf(DefaultEventSubscriber()), "121.4.170.11", 5710, "gqEkxed8rFRmBXe1", 6710)
+    val bot = KurenaiBot(listOf(DefaultEventSubscriber()))
 }

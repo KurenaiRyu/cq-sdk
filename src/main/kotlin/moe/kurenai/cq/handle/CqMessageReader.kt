@@ -56,5 +56,7 @@ class CqMessageReader(private val bot: KurenaiBot) : SimpleChannelInboundHandler
         }
     }
 
-
+    override fun channelInactive(ctx: ChannelHandlerContext) {
+        log.warn("${bot.apiHost}:${bot.wsPort} was inactive")
+    }
 }
