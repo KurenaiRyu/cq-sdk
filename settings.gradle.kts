@@ -1,1 +1,1 @@
-rootProject.name = "kurenai-cq-sdk"
+rootProject.name = "cq-sdk"
