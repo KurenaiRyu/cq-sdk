@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import moe.kurenai.cq.model.LoginInfo
 import moe.kurenai.cq.model.ResponseWrapper
 
-class GetLoginInfo : Request<ResponseWrapper<LoginInfo>>() {
+class GetLoginInfo : Request<LoginInfo>() {
 
     companion object {
         const val METHOD = "get_login_info"

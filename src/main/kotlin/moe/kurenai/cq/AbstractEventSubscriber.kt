@@ -11,31 +11,24 @@ abstract class AbstractEventSubscriber : Subscriber<Event> {
         private val log = LogManager.getLogger()
     }
 
-    private var subscription: Flow.Subscription? = null
+    protected lateinit var subscription: Flow.Subscription
+
     override fun onSubscribe(subscription: Flow.Subscription) {
         this.subscription = subscription
-        this.subscription!!.request(1)
+        this.subscription.request(1)
         onSubscribe0()
     }
 
-    abstract fun onSubscribe0()
+    open fun onSubscribe0() {}
 
     override fun onNext(event: Event) {
         onNext0(event)
-        subscription!!.request(1)
+        subscription.request(1)
     }
 
     abstract fun onNext0(event: Event)
 
-    override fun onError(e: Throwable) {
-        onError0(e)
-    }
+    override fun onError(e: Throwable) {}
 
-    abstract fun onError0(e: Throwable)
-
-    override fun onComplete() {
-        onComplete0()
-    }
-
-    abstract fun onComplete0()
+    override fun onComplete() {}
 }

@@ -9,11 +9,12 @@ import io.netty.handler.codec.http.HttpObjectAggregator
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory
 import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler
 import io.netty.handler.codec.http.websocketx.WebSocketVersion
-import moe.kurenai.cq.KurenaiBot
-import moe.kurenai.cq.handle.CqMessageReader
+import moe.kurenai.cq.AbstractCQBot
+import moe.kurenai.cq.netty.handle.ContinuationFrameHandler
+import moe.kurenai.cq.netty.handle.CqMessageReader
 import java.net.URI
 
-class WebSocketChannelInitializer(private val bot: KurenaiBot) : ChannelInitializer<SocketChannel>() {
+class WebSocketChannelInitializer(private val bot: AbstractCQBot) : ChannelInitializer<SocketChannel>() {
     @Throws(Exception::class)
     override fun initChannel(ch: SocketChannel) {
         val pipeline = ch.pipeline()
@@ -27,7 +28,7 @@ class WebSocketChannelInitializer(private val bot: KurenaiBot) : ChannelInitiali
         pipeline.addLast(
             WebSocketClientProtocolHandler(
                 WebSocketClientHandshakerFactory.newHandshaker(
-                    URI("ws://${bot.apiHost}:${bot.wsPort}/event"),
+                    URI("ws://${bot.apiHost}:${bot.wsPort}/"),
                     WebSocketVersion.V13,
                     null,
                     false,
@@ -36,7 +37,7 @@ class WebSocketChannelInitializer(private val bot: KurenaiBot) : ChannelInitiali
             )
         )
         //websocket定义了传递数据的6中frame类型
-//        pipeline.addLast(ContinuationFrameHandler::class.java.name, ContinuationFrameHandler())
-        pipeline.addLast(CqMessageReader::class.java.name, CqMessageReader(bot))
+        pipeline.addLast(ContinuationFrameHandler::class.java.name, ContinuationFrameHandler())
+        pipeline.addLast(CqMessageReader::class.simpleName, CqMessageReader(bot))
     }
 }

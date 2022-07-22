@@ -10,4 +10,6 @@ object PostType {
     const val FIELD_NAME = "post_type"
     const val MESSAGE = "message"
     const val NOTICE = "notice"
+    const val REQUEST = "request"
+    const val META = "meta_event"
 }

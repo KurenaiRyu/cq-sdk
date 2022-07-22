@@ -12,7 +12,7 @@ import java.net.http.HttpResponse
 import java.time.Duration
 import java.util.concurrent.CompletableFuture
 
-class CQClient(
+open class DefaultClient(
     val baseUrl: String,
     var token: String? = null,
     private val isDebugEnabled: Boolean = true
@@ -32,17 +32,17 @@ class CQClient(
         return HttpClient.newHttpClient()
             .sendAsync(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
             .thenApplyAsync { response: HttpResponse<ByteArray> -> response.log() }
-            .thenApply { response: HttpResponse<ByteArray> -> response.parse(request.responseType) }
+            .thenApply { response: HttpResponse<ByteArray> -> response.parse(request.responseType).data }
     }
 
-    fun <T> sendSync(request: Request<T>, timeout: Duration? = null): T {
+    fun <T> sendSync(request: Request<T>, timeout: Duration? = null): T? {
         val uri = determineUri(request)
         if (isDebugEnabled) log.debug("Request to $uri")
 
         return HttpClient.newHttpClient()
             .send(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
             .log()
-            .parse(request.responseType)
+            .parse(request.responseType).data
     }
 
     private fun determineUri(request: Request<*>): URI {

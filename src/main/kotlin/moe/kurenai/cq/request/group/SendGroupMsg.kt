@@ -7,11 +7,11 @@ import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.model.SingleMessage
 import moe.kurenai.cq.request.Request
 
-class SendGroupMsg(
+data class SendGroupMsg @JvmOverloads constructor(
     val groupId: Long,
     val message: List<SingleMessage>,
     val autoEscape: Boolean? = null,
-) : Request<ResponseWrapper<MessageId>>() {
+) : Request<MessageId>() {
 
     @JsonIgnore
     override val method = "send_group_msg"

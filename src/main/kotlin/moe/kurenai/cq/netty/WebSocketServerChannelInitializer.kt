@@ -6,11 +6,11 @@ import io.netty.handler.codec.http.HttpObjectAggregator
 import io.netty.handler.codec.http.HttpServerCodec
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler
 import io.netty.handler.stream.ChunkedWriteHandler
-import moe.kurenai.cq.KurenaiBot
-import moe.kurenai.cq.handle.ContinuationFrameHandler
-import moe.kurenai.cq.handle.CqMessageReader
+import moe.kurenai.cq.AbstractCQBot
+import moe.kurenai.cq.netty.handle.ContinuationFrameHandler
+import moe.kurenai.cq.netty.handle.CqMessageReader
 
-class WebSocketServerChannelInitializer(private val bot: KurenaiBot) : ChannelInitializer<SocketChannel>() {
+class WebSocketServerChannelInitializer(private val bot: AbstractCQBot) : ChannelInitializer<SocketChannel>() {
     @Throws(Exception::class)
     override fun initChannel(ch: SocketChannel) {
         val pipeline = ch.pipeline()

@@ -1,4 +1,4 @@
-package moe.kurenai.cq.handle
+package moe.kurenai.cq.netty.handle
 
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
@@ -14,7 +14,7 @@ class ContinuationFrameHandler : SimpleChannelInboundHandler<WebSocketFrame>() {
 
     @Throws(Exception::class)
     override fun channelRead0(ctx: ChannelHandlerContext, frame: WebSocketFrame) {
-        log.debug("Received incoming frame [{}]", frame.javaClass.name)
+        log.debug("Received incoming frame [{}]", frame.javaClass.simpleName)
         if (frame is PingWebSocketFrame) {
             ctx.channel().writeAndFlush(PongWebSocketFrame(frame.content().retain()))
             return

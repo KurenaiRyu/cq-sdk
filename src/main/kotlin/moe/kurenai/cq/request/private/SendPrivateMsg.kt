@@ -7,11 +7,11 @@ import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.model.SingleMessage
 import moe.kurenai.cq.request.Request
 
-class SendPrivateMsg(
+class SendPrivateMsg @JvmOverloads constructor(
     val userId: Long,
     val message: List<SingleMessage>,
     val autoEscape: Boolean? = null,
-) : Request<ResponseWrapper<MessageId>>() {
+) : Request<MessageId>() {
 
     @JsonIgnore
     override val method = "send_private_msg"

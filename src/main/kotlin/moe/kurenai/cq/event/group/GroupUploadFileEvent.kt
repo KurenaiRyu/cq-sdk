@@ -3,7 +3,7 @@ package moe.kurenai.cq.event.group
 import moe.kurenai.cq.event.NoticeEvent
 import moe.kurenai.cq.event.NoticeType
 
-class MemberIncreaseEvent(
+class GroupUploadFileEvent(
     override val time: Long,
     override val selfId: Long,
     override val groupId: Long,
@@ -11,11 +11,7 @@ class MemberIncreaseEvent(
     val operatorId: Long,
     val userId: Long
 ) : NoticeEvent(), GroupEvent {
-    override val noticeType = NoticeType.GROUP_INCREASE
-}
+    override val noticeType: String
+        get() = NoticeType.GROUP_UPLOAD
 
-object SubType {
-    const val FIELD_NAME = "sub_type"
-    const val APPROVE = "approve"
-    const val INVITE = "invite"
 }

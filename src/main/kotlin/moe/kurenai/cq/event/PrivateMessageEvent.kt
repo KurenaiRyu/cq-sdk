@@ -9,9 +9,17 @@ data class PrivateMessageEvent(
     override val userId: Long,
     override val message: List<SingleMessage>,
     override val rawMessage: String,
-    override val font: Int
+    override val font: Int,
+    val subType: String,
 ) : MessageEvent() {
 
-    override val messageType = MessageEventType.GROUP
+    override val messageType get() = MessageEventType.PRIVATE
 
+}
+
+object PrivateMessageEventSubType {
+    const val FRIEND = "friend"
+    const val GROUP = "group"
+    const val GROUP_SELF = "group_self"
+    const val OTHER = "other"
 }

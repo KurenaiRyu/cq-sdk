@@ -5,11 +5,11 @@ import moe.kurenai.cq.request.private.SendPrivateMsg
 import java.io.File
 import java.util.*
 
-class Message(text: String? = null) {
+class MessageBuilder(text: String? = null) {
 
     companion object {
-        fun String.asMessage(): Message {
-            return Message(this)
+        fun String.asMessage(): MessageBuilder {
+            return MessageBuilder(this)
         }
     }
 
@@ -19,44 +19,49 @@ class Message(text: String? = null) {
         text?.let { list.add(SingleMessage(MessageType.TEXT, MessageData(text = text))) }
     }
 
-    fun plus(msg: Message): Message {
+    fun plus(msg: MessageBuilder): MessageBuilder {
         list.addAll(msg.list)
         return this
     }
 
-    fun plus(msg: SingleMessage): Message {
+    fun plus(msg: SingleMessage): MessageBuilder {
         list.add(msg)
         return this
     }
 
     fun plus(msg: String) = text(msg)
 
-    fun text(msg: String): Message {
+    fun text(msg: String): MessageBuilder {
         list.add(SingleMessage(MessageType.TEXT, MessageData(text = msg)))
         return this
     }
 
-    fun at(qq: Long): Message {
+    fun at(qq: Long): MessageBuilder {
         list.add(SingleMessage(MessageType.AT, MessageData(qq = qq)))
         return this
     }
 
-    fun img(path: String, isUrl: Boolean = false): Message {
+    fun img(path: String, isUrl: Boolean = false): MessageBuilder {
         list.add(SingleMessage(MessageType.IMAGE, MessageData(file = if (isUrl) path else "file:///$path")))
         return this
     }
 
-    fun img(file: File): Message {
-        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = "base64://${Base64.getEncoder().encode(file.readBytes()).decodeToString()}")))
+    fun img(file: File): MessageBuilder {
+        list.add(
+            SingleMessage(
+                MessageType.IMAGE,
+                MessageData(file = "base64://${Base64.getEncoder().encode(file.readBytes()).decodeToString()}")
+            )
+        )
         return this
     }
 
-    fun video(path: String, isUrl: Boolean = false): Message {
+    fun video(path: String, isUrl: Boolean = false): MessageBuilder {
         list.add(SingleMessage(MessageType.VIDEO, MessageData(file = if (isUrl) path else "file:///$path")))
         return this
     }
 
-    fun record(path: String, isUrl: Boolean = false): Message {
+    fun record(path: String, isUrl: Boolean = false): MessageBuilder {
         list.add(SingleMessage(MessageType.RECORD, MessageData(file = if (isUrl) path else "file:///$path")))
         return this
     }
@@ -67,6 +72,10 @@ class Message(text: String? = null) {
 
     fun groupMsg(group: Long): SendGroupMsg {
         return SendGroupMsg(group, list)
+    }
+
+    fun build(): ArrayList<SingleMessage> {
+        return list
     }
 }
 

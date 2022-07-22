@@ -6,10 +6,13 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <ThresholdFilter level="trace" onMatch="ACCEPT" onMisMatch="DENY"/>
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout
+                    pattern="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} %style{%processId}{magenta} --- [%t] %style{%c{4}}{cyan} : %m%n%ex"/>
         </Console>
-        <RandomAccessFile name="RandomAccessFile" filename="${path}/async.log" immediateFlush="false" append="false">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <RandomAccessFile name="RandomAccessFile" filename="${path}/cq-sdk.log"
+                          filePattern="${path}/$${date:yyyy-MM}/manga-spider-%d{yyyy-MM-dd-HH}-%i.log.zip"
+                          immediateFlush="false" append="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %processId --- %-5level [%t] %logger : %msg%n"/>
         </RandomAccessFile>
     </Appenders>
     <Loggers>

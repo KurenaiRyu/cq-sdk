@@ -5,7 +5,7 @@ import moe.kurenai.cq.event.MessageEventType
 import moe.kurenai.cq.model.Member
 import moe.kurenai.cq.model.SingleMessage
 
-class GroupMessageEvent(
+data class GroupMessageEvent(
     override val time: Long,
     override val selfId: Long,
     override val messageId: Int,
@@ -14,15 +14,14 @@ class GroupMessageEvent(
     override val rawMessage: String,
     override val font: Int,
     override val groupId: Long,
-    val anonymous: Anonymous? = null,
-    val subType: String,
     val sender: Member,
+    val subType: String,
+    val anonymous: Anonymous? = null,
 ) : MessageEvent(), GroupEvent {
-    override val messageType = MessageEventType.GROUP
+    override val messageType: String get() = MessageEventType.GROUP
 }
 
 object GroupMessageSubType {
-    const val FIELD_NAME = "subtype"
     const val NORMAL = "normal"
     const val ANONYMOUS = "anonymous"
     const val NOTICE = "notice";

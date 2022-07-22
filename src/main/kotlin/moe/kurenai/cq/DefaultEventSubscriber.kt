@@ -15,14 +15,14 @@ open class DefaultEventSubscriber : AbstractEventSubscriber() {
     }
 
     override fun onNext0(event: Event) {
-        log.debug("Event \n{}", convertToString(event))
+        log.debug("Received ${event::class.simpleName} \n{}", convertToString(event))
     }
 
-    override fun onError0(e: Throwable) {
+    override fun onError(e: Throwable) {
         log.error("Error on processing update ", e)
     }
 
-    override fun onComplete0() {
+    override fun onComplete() {
         log.info("Complete processing")
     }
 }
