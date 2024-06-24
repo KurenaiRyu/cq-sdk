@@ -3,8 +3,11 @@ package moe.kurenai.cq
 import com.fasterxml.jackson.databind.JsonNode
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
-import kotlinx.coroutines.*
-import moe.kurenai.cq.event.Event
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.suspendCancellableCoroutine
 import moe.kurenai.cq.model.LoginInfo
 import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.request.GetLoginInfo
@@ -21,10 +24,10 @@ class CoroutineCQBot @JvmOverloads constructor(
     override val token: String? = null,
     override val bindPort: Int? = null,
     subscribers: List<AbstractEventSubscriber> = emptyList(),
-    private val publisher: SubmissionPublisher<Event> = SubmissionPublisher<Event>(
-        defaultPublishPool(),
-        Flow.defaultBufferSize()
-    ),
+//    private val publisher: SubmissionPublisher<Event> = SubmissionPublisher<Event>(
+//        defaultPublishPool(),
+//        Flow.defaultBufferSize()
+//    ),
 ) : AbstractCQBot() {
     companion object {
         private val log = LogManager.getLogger()
@@ -49,13 +52,19 @@ class CoroutineCQBot @JvmOverloads constructor(
     lateinit var loginInfo: LoginInfo
     private val requestMap =
         ConcurrentHashMap<String, Pair<Request<Any>, CancellableContinuation<ResponseWrapper<Any>>>>()
-    private val publisherPool: Executor
-    private val publisherDispatcher: CoroutineDispatcher
+
+    //    private val publisherPool: Executor
+//    private val publisherDispatcher: CoroutineDispatcher
+    public val messageChannel = Channel<Any>(BUFFERED)
 
     init {
-        subscribers.forEach { subscriber: AbstractEventSubscriber -> this.publisher.subscribe(subscriber) }
-        publisherPool = publisher.executor
-        publisherDispatcher = publisherPool.asCoroutineDispatcher()
+//        subscribers.forEach { subscriber: AbstractEventSubscriber -> this.publisher.subscribe(subscriber) }
+//        publisherPool = publisher.executor
+//        publisherDispatcher = publisherPool.asCoroutineDispatcher()
+    }
+
+    suspend fun getNextMessage(): Any {
+        return messageChannel.receive()
     }
 
     suspend fun start() {
@@ -64,22 +73,22 @@ class CoroutineCQBot @JvmOverloads constructor(
         log.info("Start QQ [${loginInfo.nickname}](${loginInfo.userId}) success.")
     }
 
-    fun <E : Event> addHandler(clazz: Class<E>, block: suspend (E) -> Unit) {
-        val subscriber = object : AbstractEventSubscriber() {
-            override fun onNext0(event: Event) {
-                if (clazz.isInstance(event)) {
-                    CoroutineScope(publisherDispatcher).launch {
-                        block.invoke(clazz.cast(event))
-                    }
-                }
-            }
-        }
-        publisher.subscribe(subscriber)
-    }
-
-    fun addSubscriber(subscriber: AbstractEventSubscriber) {
-        publisher.subscribe(subscriber)
-    }
+//    fun <E : Event> addHandler(clazz: Class<E>, block: suspend (E) -> Unit) {
+//        val subscriber = object : AbstractEventSubscriber() {
+//            override fun onNext0(event: Event) {
+//                if (clazz.isInstance(event)) {
+//                    CoroutineScope(publisherDispatcher).launch {
+//                        block.invoke(clazz.cast(event))
+//                    }
+//                }
+//            }
+//        }
+//        publisher.subscribe(subscriber)
+//    }
+//
+//    fun addSubscriber(subscriber: AbstractEventSubscriber) {
+//        publisher.subscribe(subscriber)
+//    }
 
     override fun resolveResponse(ctx: ChannelHandlerContext, json: String, requestId: String) {
         if (requestMap.containsKey(requestId)) {
@@ -95,7 +104,8 @@ class CoroutineCQBot @JvmOverloads constructor(
     }
 
     override fun resolveEvent(ctx: ChannelHandlerContext, jsonNode: JsonNode) {
-        publisher.submit(parseEvent(jsonNode))
+//        publisher.submit(parseEvent(jsonNode))
+        messageChannel.trySendBlocking(parseEvent(jsonNode))
     }
 
     suspend fun <T : Any> send(request: Request<T>, timeout: Long = 10, timeUnit: TimeUnit = TimeUnit.SECONDS): T? {
@@ -111,13 +121,7 @@ class CoroutineCQBot @JvmOverloads constructor(
                     requestMap.remove(request.echo)?.let { (_, c) ->
                         if (c.isActive)
                             c.cancel(
-                                TimeoutException(
-                                    "Request [${request.echo}] timeout in ${
-                                        timeUnit.toSeconds(
-                                            timeout
-                                        )
-                                    }s"
-                                )
+                                TimeoutException("Request [${request.echo}] timeout in ${timeUnit.toSeconds(timeout)}s")
                             )
                     }
                 }, timeout, timeUnit)

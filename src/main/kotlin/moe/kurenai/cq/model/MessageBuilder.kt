@@ -3,6 +3,7 @@ package moe.kurenai.cq.model
 import moe.kurenai.cq.request.group.SendGroupMsg
 import moe.kurenai.cq.request.private.SendPrivateMsg
 import java.io.File
+import java.net.URI
 import java.util.*
 
 class MessageBuilder(text: String? = null) {
@@ -41,8 +42,8 @@ class MessageBuilder(text: String? = null) {
         return this
     }
 
-    fun img(path: String, isUrl: Boolean = false): MessageBuilder {
-        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = if (isUrl) path else "file:///$path")))
+    fun img(uri: URI): MessageBuilder {
+        list.add(SingleMessage(MessageType.IMAGE, MessageData(file = uri.path)))
         return this
     }
 
