@@ -9,7 +9,7 @@ import moe.kurenai.cq.model.LoginInfo
 import moe.kurenai.cq.request.GetLoginInfo
 import moe.kurenai.cq.request.Request
 import moe.kurenai.cq.request.wrap
-import moe.kurenai.cq.uritl.DefaultMapper.MAPPER
+import moe.kurenai.cq.util.DefaultMapper.MAPPER
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.*
 

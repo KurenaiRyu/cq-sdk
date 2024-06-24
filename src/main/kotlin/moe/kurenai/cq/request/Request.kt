@@ -3,7 +3,7 @@ package moe.kurenai.cq.request
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.core.type.TypeReference
 import moe.kurenai.cq.model.ResponseWrapper
-import moe.kurenai.cq.uritl.IdGenerator
+import moe.kurenai.cq.util.IdGenerator
 
 abstract class Request<T> {
 

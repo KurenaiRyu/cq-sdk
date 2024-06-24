@@ -10,7 +10,7 @@ import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.request.GetLoginInfo
 import moe.kurenai.cq.request.Request
 import moe.kurenai.cq.request.wrap
-import moe.kurenai.cq.uritl.DefaultMapper.MAPPER
+import moe.kurenai.cq.util.DefaultMapper.MAPPER
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.*
 import kotlin.coroutines.resumeWithException
@@ -108,9 +108,9 @@ class CoroutineCQBot @JvmOverloads constructor(
                 val pair = (request to con) as Pair<Request<Any>, CancellableContinuation<ResponseWrapper<Any>>>
                 requestMap[request.echo] = pair
                 channel.eventLoop().schedule({
-                    requestMap.remove(request.echo)?.run {
-                        if (con.isActive)
-                            con.cancel(
+                    requestMap.remove(request.echo)?.let { (_, c) ->
+                        if (c.isActive)
+                            c.cancel(
                                 TimeoutException(
                                     "Request [${request.echo}] timeout in ${
                                         timeUnit.toSeconds(

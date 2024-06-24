@@ -1,7 +1,7 @@
 package moe.kurenai.cq
 
 import moe.kurenai.cq.event.Event
-import moe.kurenai.cq.uritl.DefaultMapper.convertToString
+import moe.kurenai.cq.util.DefaultMapper.convertToString
 import org.apache.logging.log4j.LogManager
 
 open class DefaultEventSubscriber : AbstractEventSubscriber() {

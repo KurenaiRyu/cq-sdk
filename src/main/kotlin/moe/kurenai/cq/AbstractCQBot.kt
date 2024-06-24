@@ -14,7 +14,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import moe.kurenai.cq.event.*
 import moe.kurenai.cq.netty.WebSocketChannelInitializer
 import moe.kurenai.cq.netty.WebSocketServerChannelInitializer
-import moe.kurenai.cq.uritl.DefaultMapper
+import moe.kurenai.cq.util.DefaultMapper
 import org.apache.logging.log4j.LogManager
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
