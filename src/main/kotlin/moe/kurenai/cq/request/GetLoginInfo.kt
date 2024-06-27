@@ -1,24 +1,14 @@
 package moe.kurenai.cq.request
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.core.type.TypeReference
 import moe.kurenai.cq.model.LoginInfo
-import moe.kurenai.cq.model.ResponseWrapper
 
-class GetLoginInfo : Request<LoginInfo>() {
+class GetLoginInfo : Request<LoginInfo>(
+    path = PATH,
+    httpMethod = HttpMethod.GET
+) {
 
     companion object {
-        const val METHOD = "get_login_info"
-        val RESPONSE_TYPE = object : TypeReference<ResponseWrapper<LoginInfo>>() {}
+        const val PATH = "get_login_info"
     }
-
-    @JsonIgnore
-    override val method = METHOD
-
-    @JsonIgnore
-    override val responseType = RESPONSE_TYPE
-
-    @JsonIgnore
-    override val httpMethod = HttpMethod.GET
 
 }

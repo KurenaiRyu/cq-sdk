@@ -3,21 +3,23 @@ package moe.kurenai.cq.request
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.core.type.TypeReference
 import moe.kurenai.cq.model.ResponseWrapper
-import moe.kurenai.cq.util.IdGenerator
+import moe.kurenai.cq.util.Snowflake
+import kotlin.reflect.typeOf
 
-abstract class Request<T> {
+abstract class Request<T> (
+    @Transient
+    val path: String,
+    @Transient
+    val httpMethod: HttpMethod = HttpMethod.POST,
+    @Transient
+    val needToken: Boolean = true,
+) {
 
-    abstract val method: String
-    abstract val responseType: TypeReference<ResponseWrapper<T>>
+    @Transient
+    val type = typeOf<ResponseWrapper<T>>()
 
-    @JsonIgnore
-    open val httpMethod: HttpMethod = HttpMethod.POST
-
-    @JsonIgnore
-    open val needToken: Boolean = true
-
-    open val echo: String by lazy {
-        IdGenerator.nextStr()
+    val echo: String by lazy {
+        Snowflake.INSTANT.nextIdStr()
     }
 }
 

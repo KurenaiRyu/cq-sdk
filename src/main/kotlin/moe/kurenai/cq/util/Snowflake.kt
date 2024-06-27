@@ -1,4 +1,4 @@
-package moe.kurenai.cq.uritl
+package moe.kurenai.cq.util
 
 import java.io.Serializable
 import java.util.*
@@ -12,6 +12,7 @@ class Snowflake(
     dataCenterId: Long = 0,
     epochDate: Date? = null
 ) : Serializable {
+    private val serialVersionUID = 1L
     private var twepoch: Long = 0
     private val workerIdBits = 5L
     private val dataCenterIdBits = 5L
@@ -29,7 +30,6 @@ class Snowflake(
 
     companion object {
         val INSTANT = Snowflake(1, 1)
-        private const val serialVersionUID = 1L
     }
 
     init {

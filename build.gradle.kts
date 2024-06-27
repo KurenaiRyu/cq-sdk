@@ -40,6 +40,7 @@ dependencies {
     implementation("io.ktor:ktor-server-cio:${Versions.ktor}")
     implementation("io.ktor:ktor-server-websockets:${Versions.ktor}")
     implementation("io.ktor:ktor-serialization-jackson:${Versions.ktor}")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}")
 
     implementation("com.github.dblock:oshi-core:3.4.0")
 

@@ -11,11 +11,10 @@ data class SendGroupMsg @JvmOverloads constructor(
     val groupId: Long,
     val message: List<SingleMessage>,
     val autoEscape: Boolean? = null,
-) : Request<MessageId>() {
-
-    @JsonIgnore
-    override val method = "send_group_msg"
-
-    @JsonIgnore
-    override val responseType = object : TypeReference<ResponseWrapper<MessageId>>() {}
+) : Request<MessageId>(
+    path = PATH
+) {
+    companion object {
+        val PATH = "send_group_msg"
+    }
 }

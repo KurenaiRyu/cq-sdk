@@ -11,11 +11,6 @@ class SendPrivateMsg @JvmOverloads constructor(
     val userId: Long,
     val message: List<SingleMessage>,
     val autoEscape: Boolean? = null,
-) : Request<MessageId>() {
-
-    @JsonIgnore
-    override val method = "send_private_msg"
-
-    @JsonIgnore
-    override val responseType = object : TypeReference<ResponseWrapper<MessageId>>() {}
-}
+) : Request<MessageId>(
+    path = "send_private_msg",
+)

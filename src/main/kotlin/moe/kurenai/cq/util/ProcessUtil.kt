@@ -1,4 +1,4 @@
-package moe.kurenai.cq.uritl
+package moe.kurenai.cq.util
 
 import oshi.SystemInfo
 import oshi.software.os.OSProcess
