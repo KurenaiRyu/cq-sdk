@@ -19,6 +19,7 @@ object Versions {
     const val log4j = "2.17.1"
     const val disruptor = "3.4.4"
     const val ktor = "2.0.2"
+    const val vertx = "4.5.8"
 }
 
 dependencies {
@@ -30,6 +31,9 @@ dependencies {
     api("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jackson}")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Versions.jackson}")
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}")
+
+    implementation("io.vertx:vertx-core:${Versions.vertx}")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines:${Versions.vertx}")
 
     implementation("io.ktor:ktor-client-core:${Versions.ktor}")
     implementation("io.ktor:ktor-client-cio:${Versions.ktor}")
