@@ -49,7 +49,7 @@ class CQBot (
     }
 
     private suspend fun handleEvent(jsonObj: JsonObject) {
-        jsonObj[PostType.FIELD_NAME]?.jsonPrimitive?.
+        jsonObj[PostType.FIELD_NAME]?.jsonPrimitive
     }
 }
 
