@@ -3,10 +3,8 @@ package moe.kurenai.cq.client
 import moe.kurenai.cq.request.HttpMethod
 import moe.kurenai.cq.request.Request
 import moe.kurenai.cq.util.DefaultMapper.convertToByteArray
-import moe.kurenai.cq.util.DefaultMapper.parse
 import org.apache.logging.log4j.LogManager
 import java.net.URI
-import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
@@ -29,24 +27,27 @@ open class DefaultClient(
         val uri = determineUri(request)
         if (isDebugEnabled) log.debug("Request to {}", uri)
 
-        return HttpClient.newHttpClient()
-            .sendAsync(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
-            .thenApplyAsync { response: HttpResponse<ByteArray> -> response.log() }
-            .thenApply { response: HttpResponse<ByteArray> -> response.parse(request.responseType).data }
+//        return HttpClient.newHttpClient()
+//            .sendAsync(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
+//            .thenApplyAsync { response: HttpResponse<ByteArray> -> response.log() }
+//            .thenApply { response: HttpResponse<ByteArray> -> response.parse(request.responseType).data }
+        return CompletableFuture();
     }
 
     fun <T> sendSync(request: Request<T>, timeout: Duration? = null): T? {
         val uri = determineUri(request)
         if (isDebugEnabled) log.debug("Request to {}", uri)
 
-        return HttpClient.newHttpClient()
-            .send(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
-            .log()
-            .parse(request.responseType).data
+//        return HttpClient.newHttpClient()
+//            .send(buildRequest(uri, request, timeout), HttpResponse.BodyHandlers.ofByteArray())
+//            .log()
+//            .parse(request.responseType).data
+        return null
     }
 
     private fun determineUri(request: Request<*>): URI {
-        return URI.create("$baseUrl/${request.method}")
+//        return URI.create("$baseUrl/${request.method}")
+        return URI.create("$baseUrl/")
     }
 
     private fun <T> buildRequest(uri: URI, request: Request<T>, timeout: Duration? = null): HttpRequest? {

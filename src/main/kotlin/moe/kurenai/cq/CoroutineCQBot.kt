@@ -95,8 +95,8 @@ class CoroutineCQBot @JvmOverloads constructor(
             val (req, con) = requestMap[requestId]!!
             try {
                 con as CancellableContinuation<Any>
-                val response = MAPPER.readValue(json, req.responseType)!!
-                con.resumeWith(Result.success(response))
+//                val response = MAPPER.readValue(json, req.responseType)!!
+//                con.resumeWith(Result.success(response))
             } catch (e: Exception) {
                 con.resumeWithException(e)
             }

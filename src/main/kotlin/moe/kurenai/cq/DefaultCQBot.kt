@@ -77,15 +77,15 @@ class DefaultCQBot @JvmOverloads constructor(
         if (requestMap.containsKey(requestId)) {
             val (req, future) = requestMap[requestId]!!
             try {
-                val response = MAPPER.readValue(json, req.responseType)!!
+//                val response = MAPPER.readValue(json, req.responseType)!!
                 when (future) {
                     is Promise<*> -> {
                         future as Promise<Any>
-                        future.trySuccess(response.data)
+//                        future.trySuccess(response.data)
                     }
                     is CompletableFuture<*> -> {
                         future as CompletableFuture<Any>
-                        future.complete(response.data)
+//                        future.complete(response.data)
                     }
                 }
             } catch (e: Exception) {

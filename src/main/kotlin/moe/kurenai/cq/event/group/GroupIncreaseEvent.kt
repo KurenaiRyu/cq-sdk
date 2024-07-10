@@ -1,8 +1,11 @@
 package moe.kurenai.cq.event.group
 
+import kotlinx.serialization.Serializable
 import moe.kurenai.cq.event.NoticeEvent
 import moe.kurenai.cq.event.NoticeType
 
+
+@Serializable
 class GroupIncreaseEvent(
     override val time: Long,
     override val selfId: Long,
@@ -11,6 +14,5 @@ class GroupIncreaseEvent(
     val operatorId: Long,
     val userId: Long
 ) : NoticeEvent(), GroupEvent {
-    override val noticeType: String
-        get() = NoticeType.GROUP_INCREASE
+    override val noticeType: String = NoticeType.GROUP_INCREASE
 }

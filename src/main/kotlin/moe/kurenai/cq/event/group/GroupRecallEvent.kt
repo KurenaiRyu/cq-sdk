@@ -1,8 +1,10 @@
 package moe.kurenai.cq.event.group
 
+import kotlinx.serialization.Serializable
 import moe.kurenai.cq.event.NoticeEvent
 import moe.kurenai.cq.event.NoticeType
 
+@Serializable
 class GroupRecallEvent(
     override val time: Long,
     override val selfId: Long,
@@ -11,6 +13,5 @@ class GroupRecallEvent(
     val operatorId: Long,
     val userId: Long
 ) : NoticeEvent(), GroupEvent {
-    override val noticeType: String
-        get() = NoticeType.GROUP_RECALL
+    override val noticeType: String = NoticeType.GROUP_RECALL
 }

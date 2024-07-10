@@ -1,5 +1,8 @@
 package moe.kurenai.cq.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class Member(
     override val userId: Long,
     val nickname: String,

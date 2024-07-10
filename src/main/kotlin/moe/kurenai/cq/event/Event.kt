@@ -1,48 +1,40 @@
 package moe.kurenai.cq.event
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.json.JsonClassDiscriminator
-import moe.kurenai.cq.event.group.GroupRecallEvent
+import kotlinx.serialization.Serializable
 
 sealed class Event {
     abstract val time: Long
     abstract val selfId: Long
-    abstract val postType: String
+    abstract val postType: PostType
 }
 
-object PostType {
-    const val FIELD_NAME = "post_type"
-    const val MESSAGE = "message"
-    const val NOTICE = "notice"
-    const val REQUEST = "request"
-    const val META = "meta_event"
+enum class PostType(
+    val type: String
+) {
+
+    MESSAGE("message"),
+    NOTICE("notice"),
+    REQUEST("request"),
+    META("meta_event"),
+
 }
 
 
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.EXISTING_PROPERTY,
-    property = "notice_type",
-    visible = true
-)
-@JsonSubTypes(
-    value = [
-        JsonSubTypes.Type(value = GroupRecallEvent::class, name = "group_increase"),
-        JsonSubTypes.Type(value = GroupRecallEvent::class, name = "group_recall"),
-    ]
-)
-
-@JsonClassDiscriminator(PostType.FIELD_NAME)
-@SerialName(PostType.NOTICE)
+@Serializable
 abstract class NoticeEvent : Event() {
-    abstract val noticeType: String
+    abstract val noticeType: NoticeType
+    override val postType = PostType.NOTICE
 }
 
-object NoticeType {
-    const val FIELD_NAME = "notice_type"
-    const val GROUP_RECALL = "group_recall"
-    const val GROUP_INCREASE = "group_increase"
-    const val GROUP_UPLOAD = "group_upload"
+@Serializable
+enum class NoticeType(
+    val type: String
+) {
+    @SerialName("group_recall")
+    GROUP_RECALL("group_recall"),
+    @SerialName("group_increase")
+    GROUP_INCREASE("group_increase"),
+    @SerialName("group_upload")
+    GROUP_UPLOAD("group_upload"),
 }

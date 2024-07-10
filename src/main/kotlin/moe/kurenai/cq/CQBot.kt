@@ -3,8 +3,15 @@ package moe.kurenai.cq
 import io.vertx.core.http.WebSocketClient
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.*
-import moe.kurenai.cq.event.PostType
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonBuilder
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
+import moe.kurenai.cq.event.*
+import moe.kurenai.cq.event.group.GroupIncreaseEvent
+import moe.kurenai.cq.event.group.GroupMessageEvent
+import moe.kurenai.cq.event.group.GroupRecallEvent
+import moe.kurenai.cq.event.group.GroupUploadFileEvent
 import org.apache.logging.log4j.LogManager
 
 class CQBot (
@@ -49,7 +56,28 @@ class CQBot (
     }
 
     private suspend fun handleEvent(jsonObj: JsonObject) {
-        jsonObj[PostType.FIELD_NAME]?.jsonPrimitive
+        val basicEvent = json.decodeFromJsonElement(BasicEvent.serializer(), jsonObj)
+        val event = when (basicEvent.postType) {
+            PostType.MESSAGE -> {
+                when (basicEvent.messageType!!) {
+                    MessageEventType.PRIVATE -> json.decodeFromJsonElement(PrivateMessageEvent.serializer(), jsonObj)
+                    MessageEventType.GROUP -> json.decodeFromJsonElement(GroupMessageEvent.serializer(), jsonObj)
+                }
+            }
+            PostType.NOTICE -> {
+                when (basicEvent.noticeType!!) {
+                    NoticeType.GROUP_RECALL -> json.decodeFromJsonElement(GroupRecallEvent.serializer(), jsonObj)
+                    NoticeType.GROUP_INCREASE -> json.decodeFromJsonElement(GroupIncreaseEvent.serializer(), jsonObj)
+                    NoticeType.GROUP_UPLOAD -> json.decodeFromJsonElement(GroupUploadFileEvent.serializer(), jsonObj)
+                }
+            }
+            PostType.REQUEST -> {
+                json.decodeFromJsonElement(RequestEvent.serializer(), jsonObj)
+            }
+            PostType.META -> {
+                json.decodeFromJsonElement(MetaEvent.serializer(), jsonObj)
+            }
+        }
     }
 }
 

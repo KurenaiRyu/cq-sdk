@@ -12,5 +12,6 @@ data class RequestWrapper<T : Request<*>>(
 )
 
 fun <T> Request<T>.wrap(): RequestWrapper<Request<T>> {
-    return RequestWrapper(this.method, this, this.echo)
+    return RequestWrapper("this.method", this, this.echo)
+//    return RequestWrapper(this.method, this, this.echo)
 }

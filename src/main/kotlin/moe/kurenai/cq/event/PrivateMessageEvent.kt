@@ -1,7 +1,10 @@
 package moe.kurenai.cq.event
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import moe.kurenai.cq.model.SingleMessage
 
+@Serializable
 data class PrivateMessageEvent(
     override val time: Long,
     override val selfId: Long,
@@ -10,16 +13,21 @@ data class PrivateMessageEvent(
     override val message: List<SingleMessage>,
     override val rawMessage: String,
     override val font: Int,
-    val subType: String,
+    val subType: PrivateMessageEventSubType,
 ) : MessageEvent() {
 
-    override val messageType get() = MessageEventType.PRIVATE
+    override val messageType = MessageEventType.PRIVATE
 
 }
 
-object PrivateMessageEventSubType {
-    const val FRIEND = "friend"
-    const val GROUP = "group"
-    const val GROUP_SELF = "group_self"
-    const val OTHER = "other"
+@Serializable
+enum class PrivateMessageEventSubType(
+    val type: String
+) {
+    @SerialName("group")
+    GROUP("group"),
+    @SerialName("group_self")
+    GROUP_SELF("group_self"),
+    @SerialName("other")
+    OTHER("other"),
 }

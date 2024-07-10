@@ -1,5 +1,6 @@
 package moe.kurenai.cq.model
 
+import kotlinx.serialization.Serializable
 import moe.kurenai.cq.request.group.SendGroupMsg
 import moe.kurenai.cq.request.private.SendPrivateMsg
 import java.io.File
@@ -80,8 +81,10 @@ class MessageBuilder(text: String? = null) {
     }
 }
 
+@Serializable
 data class SingleMessage(val type: String, val data: MessageData)
 
+@Serializable
 data class MessageData(
     val id: Int? = null,
     val qq: Long? = null,

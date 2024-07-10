@@ -1,10 +1,4 @@
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.websocket.*
-import io.ktor.websocket.*
-import moe.kurenai.cq.uritl.DefaultMapper.MAPPER
+import moe.kurenai.cq.util.DefaultMapper.MAPPER
 
 /**
  * @author Kurenai
