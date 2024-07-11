@@ -11,7 +11,9 @@ import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
-import moe.kurenai.cq.event.*
+import moe.kurenai.cq.event.Event
+import moe.kurenai.cq.event.PrivateMessageEvent
+import moe.kurenai.cq.event.PrivateMessageEventSubType
 import moe.kurenai.cq.netty.WebSocketChannelInitializer
 import moe.kurenai.cq.netty.WebSocketServerChannelInitializer
 import moe.kurenai.cq.util.DefaultMapper
@@ -122,20 +124,21 @@ abstract class AbstractCQBot {
     }
 
     protected fun parseEvent(jsonNode: JsonNode): Event {
-        return when (val postType = jsonNode.findValue(PostType.FIELD_NAME)?.textValue()) {
-            PostType.MESSAGE -> {
-                DefaultMapper.MAPPER.treeToValue(jsonNode, MessageEvent::class.java)
-            }
-            PostType.NOTICE -> {
-                DefaultMapper.MAPPER.treeToValue(jsonNode, NoticeEvent::class.java)
-            }
-            PostType.META -> {
-                DefaultMapper.MAPPER.treeToValue(jsonNode, MetaEvent::class.java)
-            }
-            else -> {
-                error("Unknown post type $postType:\n$jsonNode")
-            }
-        }
+//        return when (val postType = jsonNode.findValue(PostType.FIELD_NAME)?.textValue()) {
+//            PostType.MESSAGE -> {
+//                DefaultMapper.MAPPER.treeToValue(jsonNode, MessageEvent::class.java)
+//            }
+//            PostType.NOTICE -> {
+//                DefaultMapper.MAPPER.treeToValue(jsonNode, NoticeEvent::class.java)
+//            }
+//            PostType.META -> {
+//                DefaultMapper.MAPPER.treeToValue(jsonNode, MetaEvent::class.java)
+//            }
+//            else -> {
+//                error("Unknown post type $postType:\n$jsonNode")
+//            }
+//        }
+        return PrivateMessageEvent(1000L, 1L, 1, 1L, emptyList(), "", 1, PrivateMessageEventSubType.GROUP)
     }
 
     abstract fun resolveResponse(ctx: ChannelHandlerContext, json: String, requestId: String)

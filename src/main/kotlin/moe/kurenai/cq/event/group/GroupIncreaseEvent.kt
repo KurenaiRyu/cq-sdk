@@ -14,5 +14,5 @@ class GroupIncreaseEvent(
     val operatorId: Long,
     val userId: Long
 ) : NoticeEvent(), GroupEvent {
-    override val noticeType: String = NoticeType.GROUP_INCREASE
+    override val noticeType = NoticeType.GROUP_INCREASE
 }

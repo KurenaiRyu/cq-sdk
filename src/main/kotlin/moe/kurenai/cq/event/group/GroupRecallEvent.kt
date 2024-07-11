@@ -13,5 +13,5 @@ class GroupRecallEvent(
     val operatorId: Long,
     val userId: Long
 ) : NoticeEvent(), GroupEvent {
-    override val noticeType: String = NoticeType.GROUP_RECALL
+    override val noticeType = NoticeType.GROUP_RECALL
 }

@@ -1,7 +1,7 @@
 import kotlinx.serialization.json.Json
 import moe.kurenai.cq.event.BasicEvent
 import moe.kurenai.cq.event.PrivateMessageEvent
-import moe.kurenai.cq.model.SingleMessage
+import moe.kurenai.cq.event.PrivateMessageEventSubType
 import org.junit.jupiter.api.Test
 
 class TestKtSerialize {
@@ -13,7 +13,7 @@ class TestKtSerialize {
 
     @Test
     fun testJson() {
-        val event = PrivateMessageEvent(1000L, 1L, 1, 1L, emptyList<SingleMessage>(), "", 1, "")
+        val event = PrivateMessageEvent(1000L, 1L, 1, 1L, emptyList(), "", 1, PrivateMessageEventSubType.GROUP)
         println(event.postType)
         val json = JSON.encodeToJsonElement(PrivateMessageEvent.serializer(), event)
         println(json)

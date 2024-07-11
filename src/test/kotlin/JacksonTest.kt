@@ -1,5 +1,6 @@
 import moe.kurenai.cq.event.MessageEvent
 import moe.kurenai.cq.event.group.GroupMessageEvent
+import moe.kurenai.cq.event.group.GroupMessageSubType
 import moe.kurenai.cq.model.Member
 import moe.kurenai.cq.util.DefaultMapper
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ class JacksonTest {
     fun testSubType() {
         val event = GroupMessageEvent(
             0, 0, 0, 0, emptyList(), "", 0, 0,
-            Member(0, "", "", "", 0, "", "", "", ""), ""
+            Member(0, "", "", "", 0, "", "", "", ""), GroupMessageSubType.NOTICE
         )
         val mapper = DefaultMapper.MAPPER
         val json = mapper.writeValueAsString(event)

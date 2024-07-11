@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.util.concurrent.Promise
-import moe.kurenai.cq.event.*
+import moe.kurenai.cq.event.Event
 import moe.kurenai.cq.model.LoginInfo
 import moe.kurenai.cq.request.GetLoginInfo
 import moe.kurenai.cq.request.Request
@@ -104,22 +104,22 @@ class DefaultCQBot @JvmOverloads constructor(
     }
 
     override fun resolveEvent(ctx: ChannelHandlerContext, jsonNode: JsonNode) {
-        when (val postType = jsonNode.findValue(PostType.FIELD_NAME)?.textValue()) {
-            PostType.MESSAGE -> {
-                MAPPER.treeToValue(jsonNode, MessageEvent::class.java)
-            }
-            PostType.NOTICE -> {
-                MAPPER.treeToValue(jsonNode, NoticeEvent::class.java)
-            }
-            PostType.META -> {
-                MAPPER.treeToValue(jsonNode, MetaEvent::class.java)
-            }
-            else -> {
-                error("Unknown post type $postType:\n$jsonNode")
-            }
-        }?.let {
-            publisher.submit(it)
-        }
+//        when (val postType = jsonNode.findValue(PostType.FIELD_NAME)?.textValue()) {
+//            PostType.MESSAGE -> {
+//                MAPPER.treeToValue(jsonNode, MessageEvent::class.java)
+//            }
+//            PostType.NOTICE -> {
+//                MAPPER.treeToValue(jsonNode, NoticeEvent::class.java)
+//            }
+//            PostType.META -> {
+//                MAPPER.treeToValue(jsonNode, MetaEvent::class.java)
+//            }
+//            else -> {
+//                error("Unknown post type $postType:\n$jsonNode")
+//            }
+//        }?.let {
+//            publisher.submit(it)
+//        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -180,7 +180,6 @@ class DefaultCQBot @JvmOverloads constructor(
                         )
                     )
                 }
-
             }
         }, timeout, timeUnit)
         return future
