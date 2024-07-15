@@ -4,20 +4,30 @@ import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.core.http.WebSocketClient
 import io.vertx.core.http.WebSocketConnectOptions
 import io.vertx.kotlin.coroutines.CoroutineVerticle
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.serializer
 import moe.kurenai.cq.event.*
 import moe.kurenai.cq.event.group.GroupIncreaseEvent
 import moe.kurenai.cq.event.group.GroupMessageEvent
 import moe.kurenai.cq.event.group.GroupRecallEvent
 import moe.kurenai.cq.event.group.GroupUploadFileEvent
 import moe.kurenai.cq.model.BasicResponse
+import moe.kurenai.cq.request.Request
+import moe.kurenai.cq.request.RequestWrapper
+import moe.kurenai.cq.request.wrap
 import org.apache.logging.log4j.LogManager
-import kotlin.coroutines.Continuation
+import org.apache.logging.log4j.Logger
+import kotlin.time.Duration.Companion.seconds
 
 class CQBot(
     val host: String,
@@ -27,7 +37,7 @@ class CQBot(
 ) : CoroutineVerticle() {
 
     companion object {
-        private val log = LogManager.getLogger()
+        private val log: Logger = LogManager.getLogger()
     }
 
     private val json: Json = Json(builderAction = jsonBuilder)
@@ -38,7 +48,7 @@ class CQBot(
     }
 
     private val handlers = mutableListOf<EventHandler>()
-    private val requestConMap = mutableMapOf<String, Continuation<*>>()
+    private val requestConMap = mutableMapOf<String, CancellableContinuation<Any>>()
 
     override suspend fun start() {
 
@@ -71,12 +81,40 @@ class CQBot(
         }
     }
 
-    public fun addHandler(handler: EventHandler): Boolean {
-        return if (!handlers.contains(handler)) handlers.add(handler) else false
+    suspend fun <T> send(kSerializer: KSerializer<RequestWrapper<Request<T>>>, request: Request<T>): T {
+        val wrapper: RequestWrapper<Request<T>>  = request.wrap()
+        val requestJson = json.encodeToString(
+            kSerializer,
+            wrapper)
+        log.debug("Request: {}", requestJson)
+
+        return withTimeout(5.seconds) {
+            suspendCancellableCoroutine { con ->
+                requestConMap[wrapper.echo] = con as CancellableContinuation<Any>
+                con.invokeOnCancellation {
+                    requestConMap.remove(wrapper.echo)
+                }
+                client.webSocket().writeFinalTextFrame(requestJson)
+            }
+        }
     }
 
-    public fun removeHandler(handler: EventHandler): Boolean {
+    @OptIn(InternalSerializationApi::class)
+    suspend inline fun <reified T: Any> send(request: Request<T>): T {
+        return send(RequestWrapper.serializer(Request.serializer(T::class.serializer())), request)
+    }
+
+    fun addHandler(handler: EventHandler): EventHandler {
+        if (!handlers.contains(handler)) handlers.add(handler)
+        return handler
+    }
+
+    fun removeHandler(handler: EventHandler): Boolean {
         return handlers.remove(handler)
+    }
+
+    fun EventHandler.remove(): Boolean {
+        return removeHandler(this)
     }
 
     private suspend fun handleMessage(text: String) {
@@ -92,9 +130,7 @@ class CQBot(
     private suspend fun handleResponse(jsonObj: JsonObject) {
         val basicResponse = json.decodeFromJsonElement(BasicResponse.serializer(), jsonObj)
         val echo = basicResponse.echo?:return
-        requestConMap[echo]?.let { con ->
-            con.resumeWith(Result.success(jsonObj))
-        }
+        requestConMap[echo]?.resumeWith(Result.success(jsonObj))
     }
 
     private suspend fun handleEvent(jsonObj: JsonObject) {

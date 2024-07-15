@@ -1,11 +1,11 @@
 package moe.kurenai.cq.request
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.core.type.TypeReference
+import kotlinx.serialization.Serializable
 import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.util.Snowflake
 import kotlin.reflect.typeOf
 
+@Serializable
 abstract class Request<T> (
     @Transient
     val path: String,
