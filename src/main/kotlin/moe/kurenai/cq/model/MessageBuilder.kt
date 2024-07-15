@@ -1,5 +1,6 @@
 package moe.kurenai.cq.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import moe.kurenai.cq.request.group.SendGroupMsg
 import moe.kurenai.cq.request.private.SendPrivateMsg
@@ -7,18 +8,16 @@ import java.io.File
 import java.net.URI
 import java.util.*
 
-class MessageBuilder(text: String? = null) {
-
-    companion object {
-        fun String.asMessage(): MessageBuilder {
-            return MessageBuilder(this)
-        }
-    }
+class MessageBuilder {
 
     private val list = ArrayList<SingleMessage>()
 
-    init {
-        text?.let { list.add(SingleMessage(MessageType.TEXT, MessageData(text = text))) }
+    companion object {
+        fun of(text: String) {
+            MessageBuilder().apply {
+                plus(text)
+            }
+        }
     }
 
     fun plus(msg: MessageBuilder): MessageBuilder {
@@ -82,7 +81,7 @@ class MessageBuilder(text: String? = null) {
 }
 
 @Serializable
-data class SingleMessage(val type: String, val data: MessageData)
+data class SingleMessage(val type: MessageType, val data: MessageData)
 
 @Serializable
 data class MessageData(
@@ -102,24 +101,44 @@ data class MessageData(
     val data: String? = null,
 )
 
-object MessageType {
-    const val FIELD_NAME = "type"
-    const val TEXT = "text"
-    const val IMAGE = "image"
-    const val FACE = "face"
-    const val AT = "at"
-    const val REPLY = "reply"
-    const val JSON = "json"
-    const val VIDEO = "video"
-    const val FORWARD = "forward"
-    const val RECORD = "record"
-    const val RPS = "rps"
-    const val DICE = "dice"
-    const val SHAKE = "shake"
-    const val POKE = "poke"
-    const val SHARE = "share"
-    const val CONTACT = "contact"
-    const val MUSIC = "music"
-    const val LOCATION = "location"
-    const val NODE = "node"
+@Serializable
+enum class MessageType {
+    @SerialName("type")
+    FIELD_NAME,
+    @SerialName("text")
+    TEXT,
+    @SerialName("image")
+    IMAGE,
+    @SerialName("face")
+    FACE,
+    @SerialName("at")
+    AT,
+    @SerialName("reply")
+    REPLY,
+    @SerialName("json")
+    JSON,
+    @SerialName("video")
+    VIDEO,
+    @SerialName("forward")
+    FORWARD,
+    @SerialName("record")
+    RECORD,
+    @SerialName("rps")
+    RPS,
+    @SerialName("dice")
+    DICE,
+    @SerialName("shake")
+    SHAKE,
+    @SerialName("poke")
+    POKE,
+    @SerialName("share")
+    SHARE,
+    @SerialName("contact")
+    CONTACT,
+    @SerialName("music")
+    MUSIC,
+    @SerialName("location")
+    LOCATION,
+    @SerialName("node")
+    NODE,
 }

@@ -56,7 +56,9 @@ class CQBot(
 
         client.connect(WebSocketConnectOptions().apply {
             uri = "ws://$host:$port"
-            addHeader(HttpHeaderNames.AUTHORIZATION, "Bearer $token")
+            if (token?.isNotEmpty() == true) {
+                addHeader(HttpHeaderNames.AUTHORIZATION, "Bearer $token")
+            }
         }) { result ->
 
             val ws = result.result()
@@ -127,7 +129,7 @@ class CQBot(
         }
     }
 
-    private suspend fun handleResponse(jsonObj: JsonObject) {
+    private fun handleResponse(jsonObj: JsonObject) {
         val basicResponse = json.decodeFromJsonElement(BasicResponse.serializer(), jsonObj)
         val echo = basicResponse.echo?:return
         requestConMap[echo]?.resumeWith(Result.success(jsonObj))

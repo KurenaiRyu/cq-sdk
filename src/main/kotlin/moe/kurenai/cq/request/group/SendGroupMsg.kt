@@ -1,12 +1,13 @@
 package moe.kurenai.cq.request.group
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.core.type.TypeReference
+import kotlinx.serialization.Serializable
+import moe.kurenai.cq.model.MessageBuilder
 import moe.kurenai.cq.model.MessageId
-import moe.kurenai.cq.model.ResponseWrapper
 import moe.kurenai.cq.model.SingleMessage
 import moe.kurenai.cq.request.Request
 
+@Suppress("unused")
+@Serializable
 data class SendGroupMsg @JvmOverloads constructor(
     val groupId: Long,
     val message: List<SingleMessage>,
@@ -17,4 +18,10 @@ data class SendGroupMsg @JvmOverloads constructor(
     companion object {
         val PATH = "send_group_msg"
     }
+
+    constructor(
+        groupId: Long,
+        autoEscape: Boolean? = null,
+        messageBuilder: MessageBuilder.() -> Unit)
+            : this(groupId = groupId, autoEscape = autoEscape, message = MessageBuilder().apply(messageBuilder).build())
 }
