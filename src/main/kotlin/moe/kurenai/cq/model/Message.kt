@@ -80,6 +80,8 @@ class MessageBuilder {
     }
 }
 
+typealias MessageChain = List<SingleMessage>
+
 @Serializable
 data class SingleMessage(val type: MessageType, val data: MessageData)
 

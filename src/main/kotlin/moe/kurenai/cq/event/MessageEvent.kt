@@ -2,7 +2,7 @@ package moe.kurenai.cq.event
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import moe.kurenai.cq.model.SingleMessage
+import moe.kurenai.cq.model.MessageChain
 
 @Serializable
 abstract class MessageEvent : Event() {
@@ -10,7 +10,7 @@ abstract class MessageEvent : Event() {
     abstract val messageType: MessageEventType
     abstract val messageId: Int
     abstract val userId: Long
-    abstract val message: List<SingleMessage>
+    abstract val message: MessageChain
     abstract val rawMessage: String
     abstract val font: Int
 }

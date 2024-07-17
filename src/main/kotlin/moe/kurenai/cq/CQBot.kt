@@ -50,7 +50,7 @@ class CQBot(
     private val handlers = mutableListOf<EventHandler>()
     private val requestConMap = mutableMapOf<String, CancellableContinuation<Any>>()
 
-    override suspend fun start() {
+    public override suspend fun start() {
 
         client = vertx.createWebSocketClient()
 
@@ -166,10 +166,10 @@ class CQBot(
 }
 
 class CQBotBuilder {
-    private var port: Int = 6800
-    private var host: String = "localhost"
-    private var token: String? = null
-    private var jsonBuilder: JsonBuilder.() -> Unit = {
+    var port: Int = 6800
+    var host: String = "localhost"
+    var token: String? = null
+    var jsonBuilder: JsonBuilder.() -> Unit = {
         ignoreUnknownKeys = true
         isLenient = true
     }
@@ -178,9 +178,9 @@ class CQBotBuilder {
 }
 
 class EventHandler(
-    val block: (Event) -> Unit
+    val block: suspend (Event) -> Unit
 ) {
-    fun handle(event: Event) {
+    suspend fun handle(event: Event) {
         block(event)
     }
 }

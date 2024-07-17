@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import moe.kurenai.cq.event.MessageEvent
 import moe.kurenai.cq.event.MessageEventType
 import moe.kurenai.cq.model.Member
+import moe.kurenai.cq.model.MessageChain
 import moe.kurenai.cq.model.SingleMessage
 
 @Serializable
@@ -13,7 +14,7 @@ data class GroupMessageEvent(
     override val selfId: Long,
     override val messageId: Int,
     override val userId: Long,
-    override val message: List<SingleMessage>,
+    override val message: MessageChain,
     override val rawMessage: String,
     override val font: Int,
     override val groupId: Long,
